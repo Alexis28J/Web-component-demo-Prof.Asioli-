@@ -1,0 +1,87 @@
+* yugi-service.js
+
+Questo file è il più semplice dell’intero progetto, ma è anche quello che alimenta tutti i componenti con i dati delle carte.
+È un classico esempio di service usato per separare la logica di rete dal resto dell’applicazione.
+
+
+🧩 1. Definizione della classe
+
+export class YugiService 
+
+    - La classe viene esportata, quindi può essere importata da altri file:
+      import { YugiService } from "../services/yugi-service.js";
+
+----------------------------------------------------------------------------------------------------------------------------------------
+
+🌐 2. Costruttore
+
+constructor() {
+  this.apiUrl = "https://db.ygoprodeck.com/api/v7/cardinfo.php?num=100&offset=0";
+}
+
+Il costruttore imposta l’URL dell’API da cui recuperare i dati.
+
+Cosa significa l’URL?
+
+    - num=100 → richiede 100 carte
+    - offset=0 → parte dalla prima carta disponibile
+
+L’API risponde con un JSON contenente tutte le informazioni delle carte Yu‑Gi‑Oh.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+⚡ 3. Metodo fetchCards()
+
+fetchCards() {
+  return fetch(this.apiUrl)
+    .then((response) => response.json())
+    .then((data) => data.data);
+}
+
+Questo metodo:
+
+✔️ 1. Fa una richiesta HTTP GET
+fetch(this.apiUrl)
+
+✔️ 2. Converte la risposta in JSON
+.then((response) => response.json())
+
+✔️ 3. Estrae solo l’array delle carte
+.then((data) => data.data)
+
+L’API infatti risponde con un oggetto così:
+
+{
+  "data": [ ...lista carte... ]
+}
+
+Il metodo restituisce solo l’array delle carte, che poi viene usato da:
+
+   - <super-home> per creare tante card
+   - <super-home-2> per mostrare una card alla volta
+
+
+----------------------------------------------------------------------------------------------------------------------------
+
+📌 Riassunto finale
+
+Parte	         Funzione
+apiUrl	        URL dell’API Yu‑Gi‑Oh
+fetchCards()	Recupera i dati e restituisce solo l’array delle carte
+export	        Permette di importare il servizio nei componenti
+
+🎯 In pratica
+
+Ogni volta che un componente fa:
+
+const service = new YugiService();
+service.fetchCards().then(cards => ...)
+
+ottiene un array di 100 carte, ognuna con:
+
+    - nome
+    - descrizione
+    - immagini
+    - statistiche
+    - tipo
+    - ecc.

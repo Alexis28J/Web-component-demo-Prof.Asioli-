@@ -1,0 +1,160 @@
+* card-component.js
+
+Questo componente è uno dei più eleganti del progetto: è reattivo agli attributi, cioè si aggiorna automaticamente quando cambiano i valori passati dal componente <super-home>.
+
+
+🧩 1. Definizione della classe
+
+class CardComponent extends HTMLElement 
+
+Stai creando un nuovo custom element <super-card>.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🎯 2. observedAttributes
+
+static observedAttributes = ["card-title", "card-image", "card-description"];
+
+Questa riga è fondamentale.
+
+Significa:
+
+    - “Se uno di questi attributi cambia, chiama automaticamente attributeChangedCallback”.
+
+Gli attributi osservati sono:
+
+    - card-title
+    - card-image
+    - card-description
+
+Sono gli stessi che <super-home> inserisce dinamicamente quando crea le card.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🧱 3. Costruttore
+
+constructor(){
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+    - super() richiama il costruttore di HTMLElement.
+    - attachShadow({mode: "open"}) crea lo Shadow DOM, isolando stile e markup.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+⚡ 4. connectedCallback()
+
+connectedCallback(){
+
+}
+
+Qui non succede nulla.
+Il componente non ha bisogno di inizializzarsi subito, perché si costruisce quando riceve gli attributi.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🔄 5. attributeChangedCallback()
+
+Questo è il cuore del componente.
+
+attributeChangedCallback(name, oldValue, newValue) 
+
+Viene chiamato ogni volta che uno degli attributi osservati cambia.
+
+Esempio:
+
+Quando <super-home> fa:
+
+<super-card card-title="Blue Eyes" card-description="..." card-image="...">
+
+il browser chiama attributeChangedCallback() tre volte, una per ogni attributo.
+
+
+🧹 5.1 Reset del contenuto
+
+this.shadow.innerHTML = '';
+
+Ogni volta che un attributo cambia, il componente:
+
+   - cancella tutto lo shadow DOM
+   - ricostruisce la card da zero
+
+È un modo semplice per garantire che la card sia sempre aggiornata.
+
+
+🎨 5.2 Creazione dello stile
+
+const style = document.createElement('style');
+style.textContent = `
+    .card {
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 16px;
+        max-width: 300px;
+        font-family: Arial, sans-serif;
+        min-width: 300px;
+    }
+    .card img {
+        max-width: 100%;
+        border-radius: 4px;
+    }
+    .card h2 {
+        margin: 12px 0 8px 0;
+        font-size: 1.5em;
+    }
+    .card p {
+        color: #555;
+    } 
+`;
+this.shadow.appendChild(style);
+
+Lo stile definisce:
+
+   - bordo e arrotondamento
+   - padding
+   - larghezza minima e massima
+   - stile dell’immagine, titolo e descrizione
+
+Tutto è incapsulato nello shadow DOM.
+
+
+🧩 5.3 Inserimento dell’HTML della card
+
+this.shadow.innerHTML += `
+<div class="card">
+    <img src="${this.getAttribute('card-image')}" alt="Card Image">
+    <h2>${this.getAttribute('card-title')}</h2>
+    <p>${this.getAttribute('card-description')}</p>
+</div>
+`;
+
+Il componente prende i valori dagli attributi e li inserisce nell’HTML.
+
+Quindi:
+
+    - card-image → URL dell’immagine
+    - card-title → titolo della carta
+    - card-description → descrizione
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🏷️ 6. Registrazione del custom element
+
+customElements.define('super-card', CardComponent);
+
+Da questo momento puoi usare:
+
+<super-card></super-card>
+
+e il browser sa come costruirlo.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📌 Riassunto finale
+Parte	                    Funzione
+observedAttributes	        Dice quali attributi devono triggerare aggiornamenti
+attributeChangedCallback	Ricostruisce la card ogni volta che cambiano i dati
+Shadow DOM	                Isola stile e markup
+HTML dinamico	            Usa gli attributi per riempire immagine, titolo e descrizione
+Registrazione	            Attiva 

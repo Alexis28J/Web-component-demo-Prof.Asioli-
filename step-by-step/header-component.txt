@@ -1,0 +1,109 @@
+* header-component.js
+
+Questo componente è semplice ma molto importante: costruisce l’header dell’app e fornisce i link che il router userà per cambiare pagina.
+
+🧩 1. Definizione della classe
+
+class HeaderComponent extends HTMLElement 
+
+Stai creando un nuovo custom element <super-header>.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🧱 2. Costruttore
+
+constructor(){
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+   - super() richiama il costruttore di HTMLElement.
+
+   - attachShadow({mode: "open"}) crea lo Shadow DOM, così stile e markup dell’header non interferiscono con il resto della pagina.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+⚡ 3. connectedCallback()
+
+Questo metodo viene eseguito quando <super-header> viene inserito nel DOM.
+
+🎨 3.1 Creazione dello stile
+
+const style = document.createElement('style');
+style.textContent = `
+    header {
+        background-color: #4CAF50;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+    }
+    .link {
+        color: white;
+        margin: 0 15px;
+        text-decoration: none;
+    }
+    .link:hover {
+        text-decoration: underline;
+    }
+`;
+this.shadow.appendChild(style);
+
+Cosa fa:
+
+   - Crea un tag <style>.
+   - Imposta lo stile dell’header:
+      sfondo verde
+      testo bianco
+      centrato
+      link distanziati e con hover
+
+Lo stile è incapsulato nello shadow DOM.
+
+
+🧩 3.2 Inserimento dell’HTML
+
+this.shadow.innerHTML += `<header>
+    <h1>Welcome to My Web Component</h1>
+    <nav>
+        <a href="./#home" class="link">Home</a>
+        <a href="./#about" class="link">About</a>
+        <a href="./#contact" class="link">Contact</a>
+    </nav>
+</header>`;
+
+Questo blocco crea:
+✔️ Un titolo
+
+<h1>Welcome to My Web Component</h1>
+✔️ Una barra di navigazione
+
+Con tre link:
+  ./#home
+  ./#about
+  ./#contact
+
+Questi link non ricaricano la pagina:
+cambiano solo l’hash dell’URL, e il router intercetta il cambiamento per mostrare la pagina corretta.
+
+---------------------------------------------------------------------------------------------------------------------------------------
+
+🏷️ 4. Registrazione del custom element
+
+customElements.define('super-header', HeaderComponent);
+
+Da questo momento puoi usare:
+
+<super-header></super-header>
+
+e l’header verrà renderizzato automaticamente.
+
+----------------------------------------------------------------------------------------------------------------------------------------------
+
+📌 Riassunto rapido
+Parte	            Funzione
+Shadow DOM	        Isola stile e markup
+Stile	            Colori, layout e hover dei link
+HTML	            Titolo + barra di navigazione
+Link	            Cambiano l’hash → attivano il router
+Registrazione	    Attiva 

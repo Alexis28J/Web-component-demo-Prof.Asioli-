@@ -1,0 +1,84 @@
+* contact-component.js
+
+Questo componente è molto simile a quello dell’“About”.
+
+🧩 1. Definizione della classe
+
+class ContactComponent extends HTMLElement    (RIGA 1)
+
+- Stai creando un nuovo custom element <super-contact>.
+
+-----------------------------------------------------------------------------------------------------------------------
+
+🧱 2. Costruttore
+
+constructor(){                        (RIGHE 3-6)
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+- super() richiama il costruttore di HTMLElement.
+- attachShadow({mode: "open"}) crea lo Shadow DOM, cioè un ambiente isolato dove vivrà il contenuto del componente.
+
+
+-------------------------------------------------------------------------------------------------------------------------
+
+⚡ 3. connectedCallback()
+
+Questo metodo viene eseguito quando <super-contact> viene inserito nella pagina.
+
+🎨 3.1 Stile del componente
+
+const style = document.createElement('style');                (RIGHE 9-22)
+style.textContent = `
+    main {
+        padding: 20px;
+        font-family: Arial, sans-serif;
+    }
+    h2 {
+        color: #333;
+    }
+    p {
+        line-height: 1.6;
+    }
+`;
+this.shadow.appendChild(style);
+
+- Crea un tag <style>.
+- Definisce lo stile interno del componente.
+- Lo stile è incapsulato nello shadow DOM, quindi non interferisce con il resto della pagina.
+
+
+🧩 3.2 Inserimento dell’HTML
+
+this.shadow.innerHTML += `         (RIGHE 23-27)
+<main>
+    <h2>Contact Us</h2>
+    <p>If you have any questions, feel free to reach out!</p>
+</main>`;
+
+- Aggiunge il contenuto del componente.
+- È un semplice blocco HTML con un titolo e un paragrafo.
+
+Se avesse messo solo = e non +=, avrebbe sovrascritto il contenuto precedente, mostrando solo l’ultima carta.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+🏷️ 4. Registrazione del custom element
+
+
+customElements.define('super-contact', ContactComponent);   (RIGA 32)
+
+- Registra il tag <super-contact>.
+- Da questo momento può essere usato nell’HTML.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------
+
+📌 In breve
+Parte	                  Funzione
+Costruttore	              Crea lo shadow DOM
+Stile	                  Imposta padding, font e colori
+HTML	                  Mostra titolo e testo di contatto
+Registrazione	          Attiva il tag
+
+

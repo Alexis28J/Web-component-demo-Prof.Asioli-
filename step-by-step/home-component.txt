@@ -1,0 +1,154 @@
+* home-component.js
+
+Questo componente carica dati da un servizio esterno, li elabora e crea dinamicamente una lista di <super-card>.
+
+
+🧩 1. Import del servizio
+
+import { YugiService } from "../services/yugi-service.js";     (RIGA 1)
+
+    - Importa una classe che probabilmente fa una chiamata API per ottenere carte di Yu‑Gi‑Oh.
+    - Questo componente dipende da quel servizio per ottenere i dati.
+    
+------------------------------------------------------------------------------------------------------------------------
+
+🏗️ 2. Definizione del componente
+
+class HomeComponent extends HTMLElement   (RIGA 3)
+
+Stai creando un nuovo custom element <super-home>.
+
+------------------------------------------------------------------------------------------------------------------------
+
+🧱 3. Costruttore
+
+constructor(){     (RIGHE 5-8)
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+- super() richiama il costruttore di HTMLElement.
+  HTML Element è la superclasse che fornisce le funzionalità di base per creare un elemento personalizzato.
+- attachShadow({mode: "open"}) crea lo Shadow DOM, isolando HTML e CSS del componente.
+
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+⚡ 4. connectedCallback()      (RIGA 11)
+
+Questo metodo viene eseguito quando <super-home> viene inserito nella pagina.
+
+🎨 4.1 Creazione dello stile
+
+const style = document.createElement('style');     (RIGHE 13-21)
+style.textContent = `
+    .card-container {
+        display: flex;
+        max-width: 100vw;
+        overflow-x: auto;
+    }
+`;
+this.shadow.appendChild(style);
+
+- Crea un tag <style>.
+- Definisce una classe .card-container che:
+- usa display: flex → le card sono affiancate orizzontalmente
+- overflow-x: auto → se sono troppe, compare lo scroll orizzontale
+- Lo stile viene aggiunto allo shadow DOM.
+
+
+📦 4.2 Creazione del contenitore
+
+const container = document.createElement('div');    (RIGHE 23-24)
+container.classList.add('card-container');
+
+- Crea un <div> che conterrà tutte le card.
+- Gli assegna la classe definita prima.
+
+
+🔌 4.3 Creazione del servizio
+
+const service = new YugiService();   (RIGA 26)
+
+- Istanzia il servizio che farà la chiamata API.
+
+
+🌐 4.4 Chiamata API e generazione delle card
+
+service.fetchCards().then(data => {                            (RIGHE 27-35)
+    for (const card of data) {
+        const title = card.name.replaceAll('"', "");
+        const description = card.desc.replaceAll('"', "");
+        const imageUrl = card.card_images[0].image_url;
+        console.log(title, description, imageUrl);
+        container.innerHTML += `<super-card card-title="${title}" card-description="${description}" card-image="${imageUrl}"></super-card>`;
+    }
+});
+
+Vediamo cosa succede:
+
+🔄 fetchCards()
+    - Restituisce una Promise con i dati delle carte.
+    - Quando i dati arrivano (.then(data => {...})), parte il ciclo.
+
+🔍 Per ogni carta:
+    - card.name → titolo della carta
+    - card.desc → descrizione
+    - card.card_images[0].image_url → URL dell’immagine
+
+🧹 replaceAll('"', "")
+    - Rimuove eventuali virgolette doppie dai testi, per evitare problemi negli attributi HTML.
+
+🧱 Creazione dinamica del componente <super-card>
+    - Ogni carta viene trasformata in:
+
+   <super-card 
+      card-title="..." 
+      card-description="..." 
+      card-image="...">
+   </super-card>
+
+  Quindi il componente <super-card> riceve i dati tramite attributi HTML.
+  (Se avesse messo solo = e non +=, avrebbe sovrascritto il contenuto precedente, mostrando solo l’ultima carta.)
+
+
+📥 4.5 Aggiunta del contenitore allo shadow DOM
+
+this.shadow.appendChild(container);    (RIGA 36)
+
+    - Dopo aver popolato il contenitore, viene inserito nello shadow DOM.
+    - Il componente è completo e visibile nella pagina.
+
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+🏷️ 5. Registrazione del custom element
+
+customElements.define('super-home', HomeComponent);     (RIGA 41)
+
+- Registra il tag <super-home>.
+- Ora può essere usato nell’HTML.
+
+In JavaScript, .define non è una funzione nativa standard, ma una sintassi comune in librerie e framework (come AngularJS) per definire moduli, componenti o classi, 
+separando il codice in unità riutilizzabili e gestibili, migliorando l'organizzazione e la modularità del progetto, specialmente per applicazioni complesse. 
+Serve a creare "mattoni" di codice (moduli) che possono essere importati ed esportati, gestendo le dipendenze e rendendo il codice più strutturato, testabile e manutenibile.
+
+HomeComponent è un Web Component che mostra una serie di card con titolo, descrizione e immagine basate sui dati recuperati.
+Definisco il custom element 'super-home' associandolo alla classe HomeComponent che estende HTMLElement. 
+In questo modo posso usare il tag <super-home></super-home> nel mio HTML per includere questo componente.
+Il componente utilizza lo shadow DOM per incapsulare il suo stile e il suo contenuto.
+Quando il componente viene aggiunto al DOM, il metodo connectedCallback viene chiamato, dove viene creato uno stile per il contenitore delle card e viene popolato con le card ottenute dal servizio YugiService.
+
+
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+📌 Riassunto finale
+Parte	                Funzione
+Import del servizio	    Recupera i dati delle carte
+Costruttore	            Crea lo shadow DOM
+Stile	                Imposta layout orizzontale scrollabile
+Chiamata API	        Ottiene le carte
+Generazione dinamica	Crea per ogni carta
+Registrazione	        Attiva il tag 
+

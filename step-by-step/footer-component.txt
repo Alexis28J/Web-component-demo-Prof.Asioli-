@@ -1,0 +1,99 @@
+* footer-component.js
+
+Questo componente è molto lineare: crea un footer personalizzato con stile incapsulato nello Shadow DOM.
+
+
+🧩 1. Definizione della classe
+
+class FooterComponent extends HTMLElement 
+
+Stai creando un nuovo custom element <super-footer>.
+
+------------------------------------------------------------------------------------------------------------------------------------------------
+
+🧱 2. Costruttore
+
+constructor(){
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+   - super() richiama il costruttore di HTMLElement.
+   - attachShadow({mode: "open"}) crea lo Shadow DOM, così stile e markup del footer non interferiscono con il resto della pagina.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------
+
+⚡ 3. connectedCallback()
+
+Questo metodo viene eseguito quando <super-footer> viene inserito nel DOM.
+
+
+🎨 3.1 Creazione dello stile
+
+const style = document.createElement('style');
+style.textContent = `
+    footer {
+        background-color: #4C5045;
+        color: white;
+        padding: 10px 0;
+        text-align: center;
+    }
+
+    .link {
+        color: #FFD700;
+        text-decoration: none;
+    }
+
+    .link:hover {
+        text-decoration: underline;
+    }
+`;
+this.shadow.appendChild(style);
+
+Cosa fa:
+
+    - Crea un tag <style>.
+    - Imposta lo stile del footer:
+       sfondo grigio scuro
+       testo bianco
+       link dorato con hover
+       contenuto centrato
+
+Lo stile è incapsulato nello shadow DOM.
+
+
+🧩 3.2 Inserimento dell’HTML
+
+this.shadow.innerHTML += `
+<footer>
+    <p>© 2024 My Web Component 
+        <a class="link" href="#">Privacy Policy</a>
+    </p>
+</footer>`;
+
+Il footer contiene:
+
+  - un testo con copyright
+  - un link “Privacy Policy” (non porta a nulla, perché href="#")
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+🏷️ 4. Registrazione del custom element
+
+customElements.define('super-footer', FooterComponent);
+
+Da questo momento puoi usare:
+
+<super-footer></super-footer>
+
+e il footer verrà renderizzato automaticamente.
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+📌 Riassunto rapido
+Parte	            Funzione
+Shadow DOM	        Isola stile e markup
+Stile	            Colori, layout, hover del link
+HTML	            Footer con copyright e link
+Registrazione	    Attiva 

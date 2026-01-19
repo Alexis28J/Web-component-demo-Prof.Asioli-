@@ -7,9 +7,8 @@ class HomeComponent extends HTMLElement {
         this.shadow = this.attachShadow({ mode: 'open' });
     }
 
+
     connectedCallback(){
-
-
 
         const style = document.createElement('style');
         style.textContent = `
@@ -40,3 +39,6 @@ class HomeComponent extends HTMLElement {
 }
 
 customElements.define('super-home', HomeComponent);
+
+
+

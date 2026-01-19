@@ -1,0 +1,155 @@
+* home-component.js
+
+Questo componente è molto più interattivo rispetto a super-home: invece di mostrare tutte le carte, ne mostra una alla volta e permette di scorrerle avanti e indietro con due pulsanti.
+
+
+🧩 1. Import del servizio
+
+import { YugiService } from "../services/yugi-service.js";
+
+Serve per ottenere le carte tramite una chiamata API.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+
+🧱 2. Costruttore
+
+constructor(){
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+   - Crea lo Shadow DOM.
+   - Isola stile e markup del componente.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+⚡ 3. connectedCallback()
+
+connectedCallback()
+    console.log('connected')
+
+Viene eseguito quando <super-home-2> entra nella pagina.
+
+
+3.1 Stile del componente
+
+const style = document.createElement('style');
+style.innerHTML = `
+    .card-container{
+        display:flex;
+        justify-content:center;
+    }
+`
+this.shadow.appendChild(style);
+
+   - Crea un contenitore flessibile.
+   - Centra gli elementi (pulsanti + card).
+
+
+3.2 Chiamata API
+
+const service = new YugiService();
+service.fetchCards().then(cards => this.displayCards(cards))
+
+    - Recupera le carte.
+    - Quando arrivano, chiama displayCards(cards).
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+🧩 4. displayCards(cards)
+
+Questo metodo costruisce tutta l’interfaccia.
+
+4.1 Creazione del contenitore
+
+const container = document.createElement('div');
+container.classList.add('card-container');
+
+
+4.2 Pulsante “back”
+
+const backBtn = document.createElement('button');
+backBtn.innerHTML = 'back';
+backBtn.addEventListener('click', () => {
+    index--;
+    selectedCard = cards[index]
+    ...
+    superCard.setAttribute(...)
+})
+container.appendChild(backBtn);
+
+Funzionamento:
+
+    - Quando clicchi, index-- passa alla carta precedente.
+    - Aggiorna titolo, descrizione e immagine.
+    - Aggiorna gli attributi del <super-card>, che si ridisegna da solo grazie a attributeChangedCallback.
+
+⚠️ Nota importante: non c’è controllo per evitare index < 0.
+Se vai troppo indietro, darà errore.
+
+
+4.3 Prima carta da mostrare
+
+let index = 0;
+let selectedCard = cards[index]
+
+La prima carta è quella in posizione 0.
+
+
+Estrazione dei dati
+
+let title = selectedCard.name.replaceAll('"', '');
+let description = selectedCard.desc.replaceAll('"', '');
+let imageUrl = selectedCard.card_images[0].image_url;
+
+Rimuove eventuali virgolette e prende l’immagine.
+
+
+4.4 Creazione del componente <super-card>
+
+let superCard = document.createElement('super-card');
+superCard.setAttribute('card-title', title)
+superCard.setAttribute("card-description", description);
+superCard.setAttribute("card-image", imageUrl)
+
+    - Crea una card personalizzata.
+    - Le passa i dati tramite attributi.
+    - Il componente super-card si aggiorna automaticamente.
+
+
+4.5 Pulsante “forward”
+
+const forwardBtn = document.createElement('button');
+forwardBtn.innerHTML = 'forward';
+forwardBtn.addEventListener('click', () => {
+    index++;
+    selectedCard = cards[index]
+    ...
+    superCard.setAttribute(...)
+})
+container.appendChild(forwardBtn);
+
+Funzionamento:
+
+    - index++ → passa alla carta successiva.
+    - Aggiorna gli attributi del componente card.
+
+⚠️ Anche qui manca un controllo per evitare index >= cards.length.
+
+
+4.6 Inserimento nel DOM
+
+this.shadow.appendChild(container);
+
+Il componente è completo e visibile.
+
+
+--------------------------------------------------------------------------------------------------------------------------
+
+📌 Riassunto finale
+Parte	        Funzione
+fetchCards()	Recupera tutte le carte
+displayCards()	Costruisce UI e logica
+Pulsanti	    Cambiano l’indice della carta
+	            Si aggiorna automaticamente tramite attributi
+Shadow DOM	    Isola stile e markup

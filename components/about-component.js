@@ -1,4 +1,4 @@
-class AboutComponent extends HTMLElement {
+class AboutComponent extends HTMLElement {   
 
     constructor(){
         super();
@@ -30,3 +30,6 @@ class AboutComponent extends HTMLElement {
 }
 
 customElements.define('super-about', AboutComponent);
+
+
+

@@ -1,0 +1,126 @@
+* router-component.js
+
+Questo file è il cuore della navigazione dell’intera applicazione.
+Il professore ha costruito un mini‑router in stile SPA (Single Page Application) usando solo JavaScript vanilla e gli hash dell’URL.
+
+
+🧩 1. Definizione del componente
+
+class RouterComponent extends HTMLElement 
+
+Stai creando un nuovo custom element <router-component>.
+Questo elemento sarà responsabile di decidere quale pagina mostrare.
+
+--------------------------------------------------------------------------------------------------------------------------------------------
+
+🧱 2. Costruttore
+
+constructor() {
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+- super() richiama il costruttore di HTMLElement.
+- attachShadow() crea lo Shadow DOM, così il contenuto del router non interferisce con il resto della pagina.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+⚡ 3. connectedCallback()
+
+connectedCallback() {
+
+    this.updateRoute();
+
+    window.addEventListener('hashchange', () => this.updateRoute());
+}
+
+Questo metodo viene eseguito quando <router-component> viene inserito nella pagina.
+
+Fa due cose fondamentali:
+
+✔️ 1. Chiama updateRoute() subito
+Serve per mostrare la pagina corretta appena il componente viene caricato.
+
+✔️ 2. Ascolta i cambiamenti dell’hash nell’URL
+window.addEventListener('hashchange', ...)
+
+Ogni volta che l’URL cambia da:
+
+#/home
+#/about
+#/contact
+
+il router aggiorna la vista.
+
+------------------------------------------------------------------------------------------------------------------------------
+
+🧭 4. updateRoute()
+
+Questo è il cuore del router.
+
+const route = window.location.hash.slice(1) || 'home';
+
+Cosa fa?
+
+  -  window.location.hash → es. "#about"
+
+  - .slice(1) → rimuove il #, ottenendo "about"
+
+  -  Se non c’è hash → usa "home" come default
+
+Quindi route sarà sempre una di queste:
+
+  -  "home"
+
+  - "about"
+
+  - "contact"
+
+    oppure qualunque altra stringa (che porterà a “Page not found”)
+
+
+🔀 4.1 Routing vero e proprio
+
+if (route === 'home') {
+    this.shadow.innerHTML = `<super-home></super-home>`;
+} else if (route === 'about') {
+    this.shadow.innerHTML = `<super-about></super-about>`;
+} else if (route === 'contact') {
+    this.shadow.innerHTML = `<super-contact></super-contact>`;
+} else {
+    this.shadow.innerHTML = `<p>Page not found</p>`;
+}
+
+Come funziona?
+
+  -  Se l’URL contiene #/home → mostra <super-home>
+
+  -  Se contiene #/about → mostra <super-about>
+
+  -  Se contiene #/contact → mostra <super-contact>
+
+  -  Altrimenti → mostra un messaggio di errore
+
+In pratica, il router sostituisce dinamicamente il contenuto del suo shadow DOM con il componente corretto.
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+🏷️ 5. Registrazione del custom element
+
+customElements.define('router-component', RouterComponent);
+
+Da questo momento puoi usare:
+
+<router-component></router-component>
+
+e il router funzionerà automaticamente.
+
+----------------------------------------------------------------------------------------------------------------------------------------------------
+
+📌 Riassunto finale
+Parte	               Funzione
+connectedCallback()	   Inizializza il router e ascolta i cambiamenti dell’URL
+updateRoute()	       Decide quale componente mostrare
+Hash routing	       Usa #/qualcosa per cambiare pagina senza ricaricare
+Shadow DOM	           Isola il contenuto del router
