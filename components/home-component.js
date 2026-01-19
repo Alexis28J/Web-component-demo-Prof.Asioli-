@@ -3,7 +3,7 @@ import { YugiService } from "../services/yugi-service.js";
 class HomeComponent extends HTMLElement {
 
     constructor(){
-        super();
+        super();   //super() in una classe estesa richiama il costruttore della classe padre cioè HTMLElement
         this.shadow = this.attachShadow({ mode: 'open' });
     }
 

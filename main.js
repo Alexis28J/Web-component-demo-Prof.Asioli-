@@ -6,3 +6,7 @@ import "./components/header-component.js";
 import "./components/footer-component.js";
 import "./components/card-component.js";
 import "./components/home2-component.js";
+
+
+// Importante: il file main.js serve solo per importare i componenti web definiti in altri file JavaScript. 
+// Non contiene logica aggiuntiva.

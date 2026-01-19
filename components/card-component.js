@@ -11,7 +11,7 @@ class CardComponent extends HTMLElement {
 
     }
 
-    attributeChangedCallback(name, oldValue, newValue) {
+    attributeChangedCallback(name, oldValue, newValue) {   
         this.shadow.innerHTML = '';
         const style = document.createElement('style');
         style.textContent = `

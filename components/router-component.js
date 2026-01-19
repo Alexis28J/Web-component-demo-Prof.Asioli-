@@ -2,7 +2,7 @@ class RouterComponent extends HTMLElement {
 
     constructor() {
         super();
-        this.shadow = this.attachShadow({ mode: 'open' });
+        this.shadow = this.attachShadow({ mode: 'open' });  //shadow serve per incapsulare lo stile e il markup del componente. In altro modo, lo stile e il markup del componente potrebbero interferire con quelli della pagina principale o di altri componenti.
     }
 
     connectedCallback() {
