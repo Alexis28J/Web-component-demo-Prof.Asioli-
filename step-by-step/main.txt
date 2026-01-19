@@ -1,0 +1,28 @@
+* main.js
+
+📌 Cosa fa main.js
+ Il file sta semplicemente importando tutti i componenti Web personalizzati che il professore ha creato.
+
+
+🔍 Perché è importante? 
+Quando un file JavaScript definisce un custom element, ad esempio: customElements.define("super-header", HeaderComponent);
+
+il browser non lo conosce finché quel file non viene caricato.
+
+main.js serve proprio a questo:
+📥 caricare tutti i componenti  
+📦 registrarli nel browser  
+🧩 renderli utilizzabili nei tag HTML personalizzati
+
+
+🧠 Perché usare un file unico di import?
+
+Perché nell’index.html basta una sola riga:  <script type="module" src="./main.js"></script>
+
+e tutto il progetto si inizializza automaticamente.
+
+È un approccio più moderno rispetto a:
+
+<script src="header.js"></script>
+<script src="footer.js"></script>
+...

@@ -9,4 +9,4 @@ import "./components/home2-component.js";
 
 
 // Importante: il file main.js serve solo per importare i componenti web definiti in altri file JavaScript. 
-// Non contiene logica aggiuntiva.
+// Non contiene logica aggiuntiva. Questo file è solo un punto di ingresso (entry point) dell’applicazione.

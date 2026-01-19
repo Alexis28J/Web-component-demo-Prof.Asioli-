@@ -1,0 +1,36 @@
+* about-components.js
+
+Questo file definisce un Web Component chiamato <super-about>
+
+
+🔧 1.Definizione della classe    (RIGA 1)
+
+    class AboutComponent extends HTMLElement 
+
+Stai creando un nuovo custom element che estende HTMLElement.
+Questo permette di usare <super-about></super-about> come un tag HTML vero e proprio.
+
+ 
+
+🧱 2. Il costruttore
+
+constructor(){
+    super();
+    this.shadow = this.attachShadow({ mode: 'open' });
+}
+
+Cosa succede qui:
+
+    - super() richiama il costruttore di HTMLElement.
+    - this.attachShadow({ mode: 'open' }) crea lo Shadow DOM, cioè un DOM isolato dal resto della pagina.
+
+
+Perché usare lo Shadow DOM?
+
+    - Isola lo stile del componente.
+    - Evita conflitti con CSS esterni.
+    - Mantiene il componente indipendente e riutilizzabile.
+
+mode: "open" significa che puoi accedere allo shadow DOM da JavaScript tramite element.shadowRoot.
+
+

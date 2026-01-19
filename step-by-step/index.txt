@@ -1,0 +1,17 @@
+* index.html
+
+- RIGA 9-11: 
+  Uno può crearsi dei tag personalizzati come questi. In JavaScript moderno puoi creare custom elements, cioè tag HTML personalizzati. 
+  Se i nomi sono lunghi, è consigliabile usare nomi separati da un trattino. 
+  Può succedere che in un ulteriore aggiornamento si introducano dei nuovi tag che possano coincidere e di conseguenza possano rovinare l'intero codice.
+
+
+- RIGA 19:  
+  . type="module": indica che main.js è un modulo ES6.
+      Questo permette:
+      di usare import/export tra file JavaScript,
+      di organizzare il codice in più file senza includerli tutti a mano nell’HTML.
+
+  . src="./main.js": main.js sarà il punto di ingresso dell’app: da lì verranno importati gli altri componenti (header, footer, router, ecc.).
+
+
